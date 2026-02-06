@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Family Meal Tracker</title>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 16px;
+    }
+    h1, h2 {
+      margin-top: 0;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      font-size: 16px;
+    }
+    button {
+      background: #007aff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+    }
+    .card {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .meal {
+      border-bottom: 1px solid #eee;
+      padding: 8px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🍽️ Family Meal Tracker</h1>
+
+  <div class="card">
+    <label><strong>Family member</strong></label>
+    <select id="userSelect">
+      <option value="Alice">Alice</option>
+      <option value="Bob">Bob</option>
+      <option value="Charlie">Charlie</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <h2>Add Meal</h2>
+
+    <select id="mealType">
+      <option>Breakfast</option>
+      <option>Lunch</option>
+      <option>Tea</option>
+      <option>Dinner</option>
+      <option>Fruits</option>
+      <option>Snacks</option>
+    </select>
+
+    <input id="foodName" placeholder="Food name (e.g. chicken rice)" />
+
+    <input id="calories" type="number" placeholder="Calories" />
+    <input id="carbs" type="number" placeholder="Carbs (g)" />
+    <input id="protein" type="number" placeholder="Protein (g)" />
+    <input id="fat" type="number" placeholder="Fat (g)" />
+
+    <button onclick="addMeal()">Add Meal</button>
+  </div>
+
+  <div class="card">
+    <h2>Today</h2>
+    <div id="mealList"></div>
+  </div>
+
+  <script>
+    const todayKey = new Date().toISOString().slice(0, 10);
+
+    function loadMeals() {
+      const meals = JSON.parse(localStorage.getItem(todayKey) || "[]");
+      const list = document.getElementById("mealList");
+      list.innerHTML = "";
+
+      meals.forEach(m => {
+        const div = document.createElement("div");
+        div.className = "meal";
+        div.innerHTML = `
+          <strong>${m.user}</strong> – ${m.mealType}<br/>
+          ${m.food} <br/>
+          🔥 ${m.cal} kcal | 🥖 ${m.carbs}g | 🍗 ${m.protein}g | 🧈 ${m.fat}g
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function addMeal() {
+      const meals = JSON.parse(localStorage.getItem(todayKey) || "[]");
+
+      meals.push({
+        user: userSelect.value,
+        mealType: mealType.value,
+        food: foodName.value,
+        cal: calories.value,
+        carbs: carbs.value,
+        protein: protein.value,
+        fat: fat.value
+      });
+
+      localStorage.setItem(todayKey, JSON.stringify(meals));
+      loadMeals();
+
+      foodName.value = calories.value = carbs.value = protein.value = fat.value = "";
+    }
+
+    loadMeals();
+  </script>
+
+</body>
+</html>

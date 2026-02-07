@@ -60,7 +60,9 @@
   </div>
 
   <div class="card">
-    <h2>Add Meal</h2>
+    <h2>Add Meal</h2>    
+<input type="file" id="mealPhoto" accept="image/*" capture="environment" />
+
 
     <select id="mealType">
       <option>Breakfast</option>
@@ -86,47 +88,67 @@
     <div id="mealList"></div>
   </div>
 
-  <script>
-    const todayKey = new Date().toISOString().slice(0, 10);
+<script>
+  const todayKey = new Date().toISOString().slice(0, 10);
 
-    function loadMeals() {
-      const meals = JSON.parse(localStorage.getItem(todayKey) || "[]");
-      const list = document.getElementById("mealList");
-      list.innerHTML = "";
+  function loadMeals() {
+    const meals = JSON.parse(localStorage.getItem(todayKey) || "[]");
+    const list = document.getElementById("mealList");
+    list.innerHTML = "";
 
-      meals.forEach(m => {
-        const div = document.createElement("div");
-        div.className = "meal";
-        div.innerHTML = `
-          <strong>${m.user}</strong> – ${m.mealType}<br/>
-          ${m.food} <br/>
-          🔥 ${m.cal} kcal | 🥖 ${m.carbs}g | 🍗 ${m.protein}g | 🧈 ${m.fat}g
-        `;
-        list.appendChild(div);
-      });
+    meals.forEach(m => {
+      const div = document.createElement("div");
+      div.className = "meal";
+      div.innerHTML = `
+        <strong>${m.user}</strong> – ${m.mealType}<br/>
+        ${m.food}<br/>
+        🔥 ${m.cal} kcal | 🥖 ${m.carbs}g | 🍗 ${m.protein}g | 🧈 ${m.fat}g
+        ${m.photo ? `<br/><img src="${m.photo}" style="width:100%; border-radius:8px; margin-top:6px;">` : ""}
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function addMeal() {
+    const meals = JSON.parse(localStorage.getItem(todayKey) || "[]");
+    const fileInput = document.getElementById("mealPhoto");
+    const file = fileInput.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        saveMeal(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      saveMeal(null);
     }
+  }
 
-    function addMeal() {
-      const meals = JSON.parse(localStorage.getItem(todayKey) || "[]");
+  function saveMeal(photoData) {
+    const meals = JSON.parse(localStorage.getItem(todayKey) || "[]");
 
-      meals.push({
-        user: userSelect.value,
-        mealType: mealType.value,
-        food: foodName.value,
-        cal: calories.value,
-        carbs: carbs.value,
-        protein: protein.value,
-        fat: fat.value
-      });
+    meals.push({
+      user: userSelect.value,
+      mealType: mealType.value,
+      food: foodName.value,
+      cal: calories.value,
+      carbs: carbs.value,
+      protein: protein.value,
+      fat: fat.value,
+      photo: photoData
+    });
 
-      localStorage.setItem(todayKey, JSON.stringify(meals));
-      loadMeals();
-
-      foodName.value = calories.value = carbs.value = protein.value = fat.value = "";
-    }
-
+    localStorage.setItem(todayKey, JSON.stringify(meals));
     loadMeals();
-  </script>
+
+    foodName.value = calories.value = carbs.value = protein.value = fat.value = "";
+    mealPhoto.value = "";
+  }
+
+  loadMeals();
+</script>
+
 
 </body>
 </html>

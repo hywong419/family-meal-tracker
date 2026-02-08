@@ -60,27 +60,23 @@
   </div>
 
   <div class="card">
+    <script>
+  function openCamera() {
+    document.getElementById("mealPhoto").click();
+  }
+</script>
     <h2>Add Meal</h2>    
-<label style="
-  display: block;
-  width: 100%;
-  padding: 12px;
-  margin-top: 8px;
-  background: #e9e9eb;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 16px;
-">
+<button type="button" onclick="openCamera()">
   📸 Add meal photo
-  <input 
-    type="file" 
-    id="mealPhoto" 
-    accept="image/*"
-    style="display:none"
-  />
-</label>
+</button>
 
-
+<input
+  type="file"
+  id="mealPhoto"
+  accept="image/*"
+  capture="environment"
+  style="display:none"
+/>
 
     <select id="mealType">
       <option>Breakfast</option>

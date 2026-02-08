@@ -164,12 +164,15 @@
   }
 
   loadMeals();
-  async function captionImage(base64Image) {
+ async function captionImage(base64Image) {
   const response = await fetch(
     "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer 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"
+      },
       body: JSON.stringify({ inputs: base64Image })
     }
   );
@@ -177,20 +180,25 @@
   const result = await response.json();
   return result[0]?.generated_text || "";
 }
+
 async function estimateMacros(foodText) {
   const response = await fetch(
     "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer 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"
+      },
       body: JSON.stringify({
-        inputs: `Estimate calories, carbs (g), protein (g), and fat (g) for a typical serving of: ${foodText}. Respond in JSON with keys food, calories, carbs, protein, fat.`
+        inputs: `Estimate calories, carbs (g), protein (g), and fat (g) for a typical serving of: ${foodText}. Respond ONLY in JSON with keys food, calories, carbs, protein, fat.`
       })
     }
   );
 
   return await response.json();
 }
+
 async function estimateMeal() {
   const file = document.getElementById("mealPhoto").files[0];
   if (!file) {

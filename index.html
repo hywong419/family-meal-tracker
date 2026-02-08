@@ -61,7 +61,25 @@
 
   <div class="card">
     <h2>Add Meal</h2>    
-<input type="file" id="mealPhoto" accept="image/*" capture="environment" />
+<label style="
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  background: #e9e9eb;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+">
+  📸 Add meal photo
+  <input 
+    type="file" 
+    id="mealPhoto" 
+    accept="image/*"
+    style="display:none"
+  />
+</label>
+
 
 
     <select id="mealType">

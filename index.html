@@ -83,8 +83,8 @@
       <option>Snacks</option>
     </select>
 
-    <input id="foodName" placeholder="Food name (e.g. chicken rice)" />
-
+    <input id="foodName" placeholder="Food name (e.g. chicken breast)" oninput="autoFillMacros()" />
+<input id="portion" type="number" value="100" placeholder="Portion size (g)" oninput="autoFillMacros()" />
     <input id="calories" type="number" placeholder="Calories" />
     <input id="carbs" type="number" placeholder="Carbs (g)" />
     <input id="protein" type="number" placeholder="Protein (g)" />
@@ -122,6 +122,30 @@
       list.appendChild(div);
     });
   }
+  onst FOOD_DB = {
+  "chicken breast": { calories: 165, carbs: 0, protein: 31, fat: 3.6 },
+  "egg": { calories: 78, carbs: 0.6, protein: 6, fat: 5 },
+  "white rice": { calories: 130, carbs: 28, protein: 2.7, fat: 0.3 },
+  "brown rice": { calories: 123, carbs: 25.6, protein: 2.7, fat: 1 },
+  "apple": { calories: 52, carbs: 14, protein: 0.3, fat: 0.2 },
+  "banana": { calories: 89, carbs: 23, protein: 1.1, fat: 0.3 },
+  "salmon": { calories: 208, carbs: 0, protein: 20, fat: 13 },
+  "broccoli": { calories: 55, carbs: 11, protein: 3.7, fat: 0.6 }
+};
+function autoFillMacros() {
+  const food = foodName.value.toLowerCase().trim();
+  const portion = Number(portion.value) || 100;
+
+  if (!FOOD_DB[food]) return;
+
+  const factor = portion / 100;
+  const data = FOOD_DB[food];
+
+  calories.value = Math.round(data.calories * factor);
+  carbs.value = Math.round(data.carbs * factor);
+  protein.value = Math.round(data.protein * factor);
+  fat.value = Math.round(data.fat * factor);
+}
 
  function addMeal() {
   const fileInput = document.getElementById("mealPhoto");

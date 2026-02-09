@@ -122,7 +122,7 @@
       list.appendChild(div);
     });
   }
-  onst FOOD_DB = {
+  const FOOD_DB = {
   "chicken breast": { calories: 165, carbs: 0, protein: 31, fat: 3.6 },
   "egg": { calories: 78, carbs: 0.6, protein: 6, fat: 5 },
   "white rice": { calories: 130, carbs: 28, protein: 2.7, fat: 0.3 },
@@ -134,11 +134,11 @@
 };
 function autoFillMacros() {
   const food = foodName.value.toLowerCase().trim();
-  const portion = Number(portion.value) || 100;
+  const portionGrams = Number(document.getElementById("portion").value) || 100;
 
   if (!FOOD_DB[food]) return;
 
-  const factor = portion / 100;
+  const factor = portionGrams / 100;
   const data = FOOD_DB[food];
 
   calories.value = Math.round(data.calories * factor);

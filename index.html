@@ -123,21 +123,40 @@
     });
   }
 
-  function addMeal() {
-    const meals = JSON.parse(localStorage.getItem(todayKey) || "[]");
-    const fileInput = document.getElementById("mealPhoto");
-    const file = fileInput.files[0];
+ function addMeal() {
+  const fileInput = document.getElementById("mealPhoto");
+  const file = fileInput.files[0];
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function () {
-        saveMeal(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      saveMeal(null);
-    }
+  if (!file) {
+    saveMeal(null);
+    return;
   }
+
+  const img = new Image();
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    img.src = e.target.result;
+  };
+
+  img.onload = function () {
+    const canvas = document.createElement("canvas");
+    const maxWidth = 800;
+    const scale = Math.min(maxWidth / img.width, 1);
+
+    canvas.width = img.width * scale;
+    canvas.height = img.height * scale;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const compressed = canvas.toDataURL("image/jpeg", 0.7);
+    saveMeal(compressed);
+  };
+
+  reader.readAsDataURL(file);
+}
+
 
   function saveMeal(photoData) {
     const meals = JSON.parse(localStorage.getItem(todayKey) || "[]");
